@@ -3,7 +3,7 @@
 namespace App\Actions;
 
 use App\Models\User;
-use App\Models\UsersSMS;
+use App\Models\Purchase;
 use Illuminate\Support\Facades\Hash;
 
 class ProcessingAction
@@ -20,11 +20,11 @@ class ProcessingAction
                 'password' => Hash::make($userId)
             ]);
         }
-        $userSmsIds = UsersSMS::where('user_id', $userId)->pluck('sms_id')->toArray();
+        $userSmsIds = Purchase::where('user_id', $userId)->pluck('sms_id')->toArray();
         foreach ($data['sms'] as $sms) {
             if (!in_array($sms['id'], $userSmsIds)) {
 //                $transformSms = $this->getTransformSms($sms['body']);
-                UsersSMS::create([
+                Purchase::create([
                     'user_id' => $userId,
                     'body' => $sms['body'],
                     'sms_id' => $sms['id'],

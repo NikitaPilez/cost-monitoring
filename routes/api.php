@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/processing', [MonitoringController::class, 'processing']);
+Route::get('/purchases/{user}', [MonitoringController::class, 'purchases']);
