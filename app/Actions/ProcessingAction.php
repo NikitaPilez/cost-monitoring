@@ -23,11 +23,14 @@ class ProcessingAction
         $userSmsIds = Purchase::where('user_id', $userId)->pluck('sms_id')->toArray();
         foreach ($data['sms'] as $sms) {
             if (!in_array($sms['id'], $userSmsIds)) {
-//                $transformSms = $this->getTransformSms($sms['body']);
+                $transformSms = $this->getTransformSms($sms['body']);
                 Purchase::create([
                     'user_id' => $userId,
-                    'body' => $sms['body'],
                     'sms_id' => $sms['id'],
+                    'body' => $sms['body'],
+                    'amount' => $transformSms['amount'],
+                    'place' => $transformSms['place'],
+                    'balance' => $transformSms['balance'],
                     'buy_at' => $sms['time']
                 ]);
             }
@@ -37,10 +40,12 @@ class ProcessingAction
     public function getTransformSms($body)
     {
         $splitBody = explode(PHP_EOL, $body);
-        $amount = $splitBody[3]; // TODO
+        preg_match('(\d+[.]\d+)', $splitBody[3], $matchAmount);
+        preg_match('(\d+[.]\d+)', $splitBody[4], $matchBalance);
+        $amount = $matchAmount[0];
         $place = $splitBody[5];
         $buyAt = $splitBody[6];
-        $balance = $splitBody[4]; // TODO
+        $balance = $matchBalance[0];
 
         return [
             'amount' => $amount,
