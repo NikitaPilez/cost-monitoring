@@ -24,7 +24,7 @@ class GetPurchasesRequest extends FormRequest
     public function rules()
     {
         return [
-            'search' => 'string',
+            'search' => '',
         ];
     }
 }
