@@ -21,7 +21,16 @@ class Purchase extends Model
     protected function buyAt() : Attribute
     {
         return Attribute::make(
-            set: fn ($value) => Carbon::createFromTimestamp($value)->toDateTimeString()
+            get: fn ($value) => Carbon::parse($value)->format('d.m.Y H:s'),
+            set: fn ($value) => Carbon::createFromTimestamp($value)->toDateTimeString(),
         );
+    }
+
+    public function scopeFilter($query,  int $userId, $search = null)
+    {
+        if ($search !== null) {
+            $query->where('body', 'like', '%' . $search . '%');
+        }
+        return $query->where('user_id', $userId);
     }
 }
