@@ -6,6 +6,7 @@ use App\Actions\ProcessingAction;
 use App\Http\Requests\GetPurchasesRequest;
 use App\Http\Requests\ProcessingRequest;
 use App\Http\Resources\PurchaseCollection;
+use App\Http\Resources\PurchasesResource;
 use App\Models\Purchase;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -18,9 +19,14 @@ class MonitoringController extends Controller
         return response()->json(['result' => 'true']);
     }
 
-    public function purchases(GetPurchasesRequest $request, User $user)
+    public function userPurchasesIndex(GetPurchasesRequest $request, User $user): PurchaseCollection
     {
         $purchases = Purchase::filter($user->id, $request->search)->get();
         return new PurchaseCollection($purchases);
+    }
+
+    public function userPurchasesShow(User $user, Purchase $purchase): PurchasesResource
+    {
+        return new PurchasesResource($purchase);
     }
 }
