@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\ProcessingAction;
 use App\Http\Requests\GetPurchasesRequest;
 use App\Http\Requests\ProcessingRequest;
+use App\Http\Requests\UpdatePurchaseRequest;
 use App\Http\Resources\PurchaseCollection;
 use App\Http\Resources\PurchasesResource;
 use App\Models\Purchase;
@@ -25,8 +26,14 @@ class MonitoringController extends Controller
         return new PurchaseCollection($purchases);
     }
 
-    public function userPurchasesShow(User $user, Purchase $purchase): PurchasesResource
+    public function userPurchasesShow(Purchase $purchase): PurchasesResource
     {
+        return new PurchasesResource($purchase);
+    }
+
+    public function userPurchasesUpdate(Purchase $purchase, UpdatePurchaseRequest $request): PurchasesResource
+    {
+        $purchase->update($request->validated());
         return new PurchasesResource($purchase);
     }
 }

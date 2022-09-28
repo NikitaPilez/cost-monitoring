@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/processing', [MonitoringController::class, 'processing']);
 Route::get('/user/{user}/purchases', [MonitoringController::class, 'userPurchasesIndex']);
-Route::get('/user/{user}/purchases/{purchase}', [MonitoringController::class, 'userPurchasesShow']);
+Route::get('/user/purchases/{purchase}', [MonitoringController::class, 'userPurchasesShow']);
+Route::post('/user/purchases/{purchase}', [MonitoringController::class, 'userPurchasesUpdate']);
