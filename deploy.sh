@@ -7,6 +7,6 @@ echo "Building..." && \
 composer i --no-dev --optimize-autoloader && \
 rm -rf .env.example .gitattributes composer.lock .git* README.md && \
 echo "Deploying..." && \
-rsync -av --delete --exclude ".env" --exclude "/storage" ./ user@143.198.113.70:backend/ && \
-ssh user@143.198.113.70 "cd backend && php artisan migrate && php artisan optimize && php artisan route:cache && php artisan cache:clear" && \
+rsync -av --delete --exclude ".env" --exclude "/storage" ./ user@142.93.102.201:backend/ && \
+ssh user@142.93.102.201 "cd backend && php artisan migrate && php artisan optimize && php artisan route:cache && php artisan cache:clear" && \
 echo "Done in ${SECONDS} sec."
