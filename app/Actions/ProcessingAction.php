@@ -2,30 +2,21 @@
 
 namespace App\Actions;
 
-use App\Models\User;
 use App\Models\Purchase;
-use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class ProcessingAction
 {
-    public function execute($data)
+    public function execute($data, $bearerToken)
     {
-        $userId = $data['user_id'];
-        $user = User::where('id', $userId)->first();
-        if ($user === null) {
-            User::create([
-                'id' => $userId,
-                'name' => 'user' . $userId,
-                'email' => $userId . '@gmail.com',
-                'password' => Hash::make($userId)
-            ]);
-        }
-        $userSmsIds = Purchase::where('user_id', $userId)->pluck('sms_id')->toArray();
+        $token = PersonalAccessToken::findToken($bearerToken);
+        $user = $token->tokenable;
+        $userSmsIds = Purchase::where('user_id', $user->id)->pluck('sms_id')->toArray();
         foreach ($data['sms'] as $sms) {
             if (!in_array($sms['id'], $userSmsIds)) {
                 $transformSms = $this->getTransformSms($sms['body']);
                 Purchase::create([
-                    'user_id' => $userId,
+                    'user_id' => $user->id,
                     'sms_id' => $sms['id'],
                     'body' => $sms['body'],
                     'amount' => $transformSms['amount'],
