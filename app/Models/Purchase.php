@@ -31,6 +31,6 @@ class Purchase extends Model
         if ($search !== null) {
             $query->where('body', 'like', '%' . $search . '%');
         }
-        return $query->where('user_id', $userId);
+        return $query->where('user_id', $userId)->orderBy('buy_at', 'DESC');
     }
 }

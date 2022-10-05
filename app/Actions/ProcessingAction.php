@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Events\NewPurchase;
 use App\Models\Purchase;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -12,8 +13,10 @@ class ProcessingAction
         $token = PersonalAccessToken::findToken($bearerToken);
         $user = $token->tokenable;
         $userSmsIds = Purchase::where('user_id', $user->id)->pluck('sms_id')->toArray();
+        $haveNewPurchase = false;
         foreach ($data['sms'] as $sms) {
             if (!in_array($sms['id'], $userSmsIds)) {
+                $haveNewPurchase = true;
                 $transformSms = $this->getTransformSms($sms['body']);
                 Purchase::create([
                     'user_id' => $user->id,
@@ -26,6 +29,8 @@ class ProcessingAction
                 ]);
             }
         }
+
+        $haveNewPurchase !== true ?: NewPurchase::dispatch($user->id);
     }
 
     public function getTransformSms($body)
