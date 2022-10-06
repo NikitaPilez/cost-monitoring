@@ -17,7 +17,7 @@ class AuthController extends Controller
         if(!Auth::attempt($request->only(['email', 'password']))) {
             return [
                 'success' => false,
-                'error' => 'Unauthorised'
+                'error' => 'Invalid data'
             ];
         }
         else {
