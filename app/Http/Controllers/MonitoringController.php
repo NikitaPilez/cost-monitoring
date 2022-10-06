@@ -16,7 +16,7 @@ class MonitoringController extends Controller
 {
     public function processing(ProcessingRequest $request, ProcessingAction $processingAction): JsonResponse
     {
-        $processingAction->execute($request->validated(), $request->bearerToken());
+        $processingAction->execute($request->validated());
         return response()->json(['result' => 'true']);
     }
 

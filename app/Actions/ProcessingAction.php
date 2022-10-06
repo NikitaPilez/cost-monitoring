@@ -4,14 +4,15 @@ namespace App\Actions;
 
 use App\Events\NewPurchase;
 use App\Models\Purchase;
+use App\Models\User;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class ProcessingAction
 {
-    public function execute($data, $bearerToken)
+    public function execute($data)
     {
-        $token = PersonalAccessToken::findToken($bearerToken);
-        $user = $token->tokenable;
+        /** @var User $user */
+        $user = auth()->user();
         $userSmsIds = Purchase::where('user_id', $user->id)->pluck('sms_id')->toArray();
         $haveNewPurchase = false;
         foreach ($data['sms'] as $sms) {
