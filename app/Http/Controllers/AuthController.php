@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -38,6 +40,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
+        event(new Registered($user));
+
         return response()->json([
             'user' => $user,
             'token' => $user->createToken('token')->plainTextToken
@@ -50,5 +54,21 @@ class AuthController extends Controller
         return response()->json([
             'data' => $token->tokenable
         ]);
+    }
+
+    public function verify($userId)
+    {
+        /** @var User $user */
+        $user = User::findOrFail($userId);
+
+        if ($user->hasVerifiedEmail()) {
+            return 'Already verified';
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return 'Success verified';
     }
 }
