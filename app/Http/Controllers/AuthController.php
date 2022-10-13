@@ -18,16 +18,15 @@ class AuthController extends Controller
     {
         if(!Auth::attempt($request->only(['email', 'password']))) {
             return response()->json([
-                'message' => 'Invalid data.'
+                'message' => 'Wrong email or password.'
             ], 404);
         }
         else {
             $user = User::where('email', $request->email)->firstOrFail();
-            $token = $user->createToken('token')->plainTextToken;
-            return [
+            return response()->json([
                 'success' => true,
-                'token' => $token
-            ];
+                'token' => $user->createToken('token')->plainTextToken
+            ]);
         }
     }
 
@@ -47,11 +46,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function user(Request $request)
+    public function user()
     {
-        $token = PersonalAccessToken::findToken($request->bearerToken());
         return response()->json([
-            'data' => $token->tokenable
+            'data' => auth()->user()
         ]);
     }
 
