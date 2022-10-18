@@ -5,7 +5,6 @@ namespace App\Actions;
 use App\Events\NewPurchase;
 use App\Models\Purchase;
 use App\Models\User;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class ProcessingAction
 {
