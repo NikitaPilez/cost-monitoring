@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,14 +15,15 @@ class Purchase extends Model
         'amount',
         'balance',
         'place',
-        'buy_at'
+        'buy_at',
+        'is_accrual'
     ];
 
     protected function buyAt() : Attribute
     {
         return Attribute::make(
             get: fn ($value) => Carbon::parse($value)->format('d.m.Y H:s'),
-            set: fn ($value) => Carbon::createFromTimestamp($value)->toDateTimeString(),
+            set: fn ($value) => Carbon::parse($value)->format('Y-m-d H:i:s'),
         );
     }
 

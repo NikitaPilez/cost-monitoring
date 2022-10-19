@@ -25,8 +25,7 @@ class ProcessingRequest extends FormRequest
     {
         return [
             'sms.*.id' => 'integer|required',
-            'sms.*.body' => 'required',
-            'sms.*.time' => 'required'
+            'sms.*.body' => 'required'
         ];
     }
 }
