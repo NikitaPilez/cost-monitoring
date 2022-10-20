@@ -10,13 +10,13 @@ use Tests\TestCase;
 class TransformSmsTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * A basic feature transform sms.
      *
      * @dataProvider dataProvider
      *
      * @return void
      */
-    public function test_example($body, $amount, $place, $balance, $buyAt, $isAccrual)
+    public function test_transform_sms($body, $amount, $place, $balance, $buyAt, $isAccrual)
     {
         $action = new ProcessingAction();
         $transformSms = $action->getTransformSms($body);
@@ -30,7 +30,7 @@ class TransformSmsTest extends TestCase
     public function dataProvider()
     {
         return [
-            [
+            'Oplata' => [
                 'Blabla 4.5241' . PHP_EOL . 'Oplata' . PHP_EOL . 'Uspeshno' . PHP_EOL . 'Summa:5.08 BYN' . PHP_EOL . 'Ostatok:604.59 BYN' . PHP_EOL . 'STOLOVAYA BAPB' . PHP_EOL . '20.09.2022 13:03:29',
                 '5.08',
                 'STOLOVAYA BAPB',
@@ -38,7 +38,7 @@ class TransformSmsTest extends TestCase
                 '20.09.2022 13:03:29',
                 0
             ],
-            [
+            'Spisanie' => [
                 'Karta 4.5241' . PHP_EOL . 'Spisanie' . PHP_EOL . 'Uspeshno' . PHP_EOL . 'Summa:32.09 BYN' . PHP_EOL . 'Ostatok:412.45 BYN' . PHP_EOL . 'POPOLNENIE SCHETA: 91KBYN-C745D8' . PHP_EOL . '18.10.2022 14:52:11',
                 '32.09',
                 'POPOLNENIE SCHETA: 91KBYN-C745D8',
@@ -46,7 +46,7 @@ class TransformSmsTest extends TestCase
                 '18.10.2022 14:52:11',
                 0
             ],
-            [
+            'Postuplenie' => [
             'Karta 4.5241' . PHP_EOL . 'Postuplenie' . PHP_EOL . 'Uspeshno' . PHP_EOL . 'Summa:45.32 BYN' . PHP_EOL . 'Ostatok:412.45 BYN' . PHP_EOL . '18.10.2022 14:52:11',
                 '45.32',
                 'Postuplenie',
