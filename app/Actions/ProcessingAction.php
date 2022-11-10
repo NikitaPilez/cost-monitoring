@@ -17,7 +17,6 @@ class ProcessingAction
         $user = auth()->user();
         $userSmsIds = Purchase::where('user_id', $user->id)->pluck('sms_id')->toArray();
         $haveNewPurchase = false;
-        Log::info('Processing data: ', $data);
         foreach ($data['sms'] as $sms) {
             if (!in_array($sms['id'], $userSmsIds)) {
                 if ($this->isValidSms($sms['body'])) {
