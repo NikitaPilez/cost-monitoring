@@ -7,6 +7,7 @@ use App\Models\Purchase;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use PHPUnit\Exception;
 
 class ProcessingAction
 {
@@ -21,17 +22,22 @@ class ProcessingAction
             if (!in_array($sms['id'], $userSmsIds)) {
                 if ($this->isValidSms($sms['body'])) {
                     $haveNewPurchase = true;
-                    $transformSms = $this->getTransformSms($sms['body']);
-                    Purchase::create([
-                        'user_id' => $user->id,
-                        'sms_id' => $sms['id'],
-                        'body' => $sms['body'],
-                        'amount' => $transformSms['amount'],
-                        'place' => $transformSms['place'],
-                        'balance' => $transformSms['balance'],
-                        'buy_at' => $transformSms['buyAt'],
-                        'is_accrual' => $transformSms['isAccrual']
-                    ]);
+                    try {
+                        $transformSms = $this->getTransformSms($sms['body']);
+                        Purchase::create([
+                            'user_id' => $user->id,
+                            'sms_id' => $sms['id'],
+                            'body' => $sms['body'],
+                            'amount' => $transformSms['amount'],
+                            'place' => $transformSms['place'],
+                            'balance' => $transformSms['balance'],
+                            'buy_at' => $transformSms['buyAt'],
+                            'is_accrual' => $transformSms['isAccrual']
+                        ]);
+                    } catch (Exception $exception) {
+                        Log::error('Processing error: ' . $exception->getMessage(), $data);
+                    }
+
                 }
             }
         }
